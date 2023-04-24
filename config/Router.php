@@ -15,3 +15,14 @@ $this->get('/team_add', 'futebol\FutebolController@teamAdd');
 $this->post('/team_save', 'futebol\FutebolController@teamSave');
 $this->post('/team_update', 'futebol\FutebolController@teamUpdate');
 
+$this->get('/api/v1/leagues', 'api\v1\LeaguesApi@index');
+$this->get('/api/v1/leagues/{id}', 'api\v1\LeaguesApi@show');
+$this->post('/api/v1/leagues', 'api\v1\LeaguesApi@store');
+$this->put('/api/v1/leagues/{id}', 'api\v1\LeaguesApi@update');
+$this->delete('/api/v1/leagues/{id}', 'api\v1\LeaguesApi@destroy');
+
+$this->get('/api/v1/teams', 'api\v1\TeamsApi@index');
+$this->get('/api/v1/teams/{id}', 'api\v1\TeamsApi@show');
+$this->post('/api/v1/teams', 'api\v1\TeamsApi@store');
+$this->put('/api/v1/teams/{id}', 'api\v1\TeamsApi@update');
+$this->delete('/api/v1/teams/{id}', 'api\v1\TeamsApi@destroy');

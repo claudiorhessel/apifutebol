@@ -45,7 +45,8 @@ class Router
     {
         $this->getArr[] = [
             'router' => $router,
-            'call' => $call
+            'call' => $call,
+            'method' => 'GET'
         ];
     }
 
@@ -53,7 +54,26 @@ class Router
     {
         $this->getArr[] = [
             'router' => $router,
-            'call' => $call
+            'call' => $call,
+            'method' => 'POST'
+        ];
+    }
+
+    private function put($router, $call)
+    {
+        $this->getArr[] = [
+            'router' => $router,
+            'call' => $call,
+            'method' => 'PUT'
+        ];
+    }
+
+    private function delete($router, $call)
+    {
+        $this->getArr[] = [
+            'router' => $router,
+            'call' => $call,
+            'method' => 'DELETE'
         ];
     }
 
@@ -66,12 +86,22 @@ class Router
             case 'POST':
                 $this->executePost();
                 break;
+            case 'PUT':
+                $this->executePut();
+                break;
+            case 'DELETE':
+                $this->executeDelete();
+                break;
         }
     }
 
     private function executeGet()
     {
         foreach ($this->getArr as $get) {
+            if ($get['method'] != "GET") {
+                continue;
+            }
+
             $r = substr($get['router'], 1);
 
             if (substr($r, -1) == '/') {
@@ -103,6 +133,9 @@ class Router
     private function executePost()
     {
         foreach ($this->getArr as $get) {
+            if ($get['method'] != "POST") {
+                continue;
+            }
             $r = substr($get['router'], 1);
 
             if (substr($r, -1) == '/') {
@@ -127,6 +160,76 @@ class Router
                 }
 
                 $this->executeController($get['call'], $params);
+            }
+        }
+    }
+
+    private function executePut()
+    {
+        foreach ($this->getArr as $get) {
+            if ($get['method'] != "PUT") {
+                continue;
+            }
+
+            $r = substr($get['router'], 1);
+
+            if (substr($r, -1) == '/') {
+                $r = substr($r, 0, -1);
+            }
+
+            if ($r == $this->uri) {
+                if (is_callable($get['call'])) {
+                    $get['call']();
+                    return;
+                }
+
+                $this->executeController($get['call']);
+            }
+
+            $params = $this->getRouteWithParams($r, $this->uri);
+
+            if ($params != null) {
+                if (is_callable($get['call'])) {
+                    $get['call']();
+                    return;
+                }
+
+                $this->executeController($get['call'], $params);
+            }
+        }
+    }
+
+    private function executeDelete()
+    {
+        foreach ($this->getArr as $get) {
+            if ($get['method'] != "DELETE") {
+                continue;
+            }
+
+            $r = substr($get['router'], 1);
+
+            if (substr($r, -1) == '/') {
+                $r = substr($r, 0, -1);
+            }
+
+            if ($r == $this->uri) {
+                if (is_callable($get['call'])) {
+                    $get['call']();
+                    break;
+                } else {
+                    $this->executeController($get['call']);
+                }
+            }
+
+            $params = $this->getRouteWithParams($r, $this->uri);
+
+            if ($params != null) {
+                if (is_callable($get['call'])) {
+                    $get['call']();
+                    break;
+                } else {
+                    $this->executeController($get['call'], $params);
+                }
             }
         }
     }
