@@ -13,7 +13,7 @@ class TeamsModel extends Model
         parent::setTable($this->table);
     }
 
-    public function getAllTeams($params = [])
+    public function getAllTeams($params = [], $showDeleted = false)
     {
         $parseString = null;
         $where = null;
@@ -22,6 +22,15 @@ class TeamsModel extends Model
             $data = Helper::dbPrepateData($params);
             $parseString = Helper::dbDataToParseString($data);
             $where = Helper::dbDataToWhereOR($data);
+        }
+
+        if (!$showDeleted) {
+            $parseString .= "&deletedAt=null";
+            $where .= " AND `deletedAt` <=> :deletedAt";
+            if (count($params) > 0) {
+                $parseString = "";
+                $where = " WHERE `deletedAt` is null";
+            }
         }
 
         READ->FullRead("SELECT * FROM `teams` " . $where, $parseString);
@@ -36,9 +45,16 @@ class TeamsModel extends Model
         return $rows;
     }
 
-    public function getTeamById($id) 
+    public function getTeamById($id, $showDeleted = false) 
     {
-        READ->FullRead("SELECT * FROM `teams` WHERE `id` = :id" , "id={$id}");
+        $parseString = null;
+        $where = null;
+
+        if (!$showDeleted) {
+            $where .= " AND `deletedAt` IS NULL";
+        }
+
+        READ->FullRead("SELECT * FROM `teams` WHERE `id` = :id " . $where, "id={$id}" . $parseString);
         if (READ->getRowCount() < 1) {
             $return["status"] = false;
             $return["message"] = "Nenhum dado encontrado";
@@ -50,9 +66,14 @@ class TeamsModel extends Model
         return $rows;
     }
 
-    public function getTeamByLeagueId($leagueId)
+    public function getTeamByLeagueId($leagueId, $showDeleted = false)
     {
-        READ->FullRead("SELECT * FROM `teams` WHERE `league_id` = :league_id", "league_id={$leagueId}");
+        $where = NULL;
+        if (!$showDeleted) {
+            $where .= " AND `deletedAt` IS NULL";
+        }
+
+        READ->FullRead("SELECT * FROM `teams` WHERE `league_id` = :league_id " . $where, "league_id={$leagueId}");
         if (READ->getRowCount() < 1) {
             return false;
         }

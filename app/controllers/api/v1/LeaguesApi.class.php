@@ -3,6 +3,7 @@ namespace app\controllers\api\v1;
 
 use app\core\Controller;
 use app\models\LeaguesModel;
+use app\validations\LeagueValidations;
 use Helper;
 
 class LeaguesApi extends Controller {
@@ -66,6 +67,22 @@ class LeaguesApi extends Controller {
             "is_current" => $input["is_current"]
         ];
 
+        $leagueValidations = new LeagueValidations;
+        $validations = $leagueValidations->validateInsert($dataLeague);
+
+        if ($validations) {
+            $code = 401;
+            $return = [
+                "status" => "Erro",
+                "message" => "Erro na validação ao gravar liga",
+                "validations" => $validations
+            ];
+
+            http_response_code($code);
+            print_r(json_encode($return));
+            die();
+        }
+
         $leagueId = $leaguesModel->createLeague($dataLeague);
 
         $code = 201;
@@ -108,6 +125,22 @@ class LeaguesApi extends Controller {
             "standings" => $input["standings"],
             "is_current" => $input["is_current"]
         ];
+
+        $leagueValidations = new LeagueValidations;
+        $validations = $leagueValidations->validateUpdate($dataLeague, $id);
+
+        if ($validations) {
+            $code = 401;
+            $return = [
+                "status" => "Erro",
+                "message" => "Erro na validação ao atualizar liga",
+                "validations" => $validations
+            ];
+
+            http_response_code($code);
+            print_r(json_encode($return));
+            die();
+        }
 
         $leagueUpdated = $leaguesModel->updateLeague($id, $dataLeague);
 

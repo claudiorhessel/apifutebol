@@ -8,7 +8,7 @@ class LeaguesModel extends Model
 {
     protected $table = 'leagues';
 
-    public function getAllLeagues($params = [])
+    public function getAllLeagues($params = [], $showDeleted = false)
     {
         $parseString = null;
         $where = null;
@@ -17,6 +17,15 @@ class LeaguesModel extends Model
             $data = Helper::dbPrepateData($params);
             $parseString = Helper::dbDataToParseString($data);
             $where = Helper::dbDataToWhereOR($data);
+        }
+
+        if (!$showDeleted) {
+            $parseString .= "&deletedAt=null";
+            $where .= " AND `deletedAt` <=> :deletedAt";
+            if (count($params) > 0) {
+                $parseString = "";
+                $where = " WHERE `deletedAt` is null";
+            }
         }
 
         READ->FullRead("SELECT * FROM `leagues` " . $where, $parseString);
@@ -28,8 +37,13 @@ class LeaguesModel extends Model
         return $rows;
     }
 
-    public function getLeagueWithCoveragesAndFixturesById($id)
+    public function getLeagueWithCoveragesAndFixturesById($id, $showDeleted = false)
     {
+        $where = NULL;
+        if (!$showDeleted) {
+            $where .= " AND `leagues`.`deletedAt` IS NULL";
+        }
+
         READ->FullRead("SELECT 
                 `leagues`.*,
                 `leagues`.`id` as `league_id`,
@@ -41,7 +55,7 @@ class LeaguesModel extends Model
             FROM `leagues`
             LEFT JOIN `coverages` ON `leagues`.`id` = `coverages`.`league_id`
             LEFT JOIN `fixtures` ON `coverages`.`id` = `fixtures`.`coverage_id`
-            WHERE `leagues`.`id` = :id" , "id={$id}"
+            WHERE `leagues`.`id` = :id" , "id={$id} . $where"
         );
         if (READ->getRowCount() < 1) {
             return false;
@@ -51,9 +65,30 @@ class LeaguesModel extends Model
         return $rows;
     }
 
-    public function getLeagueById($id)
+    public function getLeagueById($id, $showDeleted = false)
     {
-        READ->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`id` = :id" , "id={$id}");
+        $where = NULL;
+        if (!$showDeleted) {
+            $where .= " AND `deletedAt` IS NULL";
+        }
+
+        READ->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`id` = :id " . $where , "id={$id}");
+        if (READ->getRowCount() < 1) {
+            return false;
+        }
+        $rows = READ->getResult();
+
+        return $rows;
+    }
+
+    public function getLeagueByReferalLeagueId($id, $showDeleted = false)
+    {
+        $where = NULL;
+        if (!$showDeleted) {
+            $where .= " AND `deletedAt` IS NULL";
+        }
+
+        READ->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`referal_league_id` = :id " . $where , "id={$id}");
         if (READ->getRowCount() < 1) {
             return false;
         }
