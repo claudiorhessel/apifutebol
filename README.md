@@ -62,7 +62,7 @@ Executar a URL abaixo para que o seeder seja executado:
 
 Se tudo estiver corrigo conforme o esperado ao acessar a URL do projeto a tela inicial será exibida:
 
-(public/images/tela_inicial.png)
+![Tela inicial do sistema](public/images/tela_inicial.png)
 
 ## APIs
 Abaixo segue o link com o Export da Collection do Insomnia:
