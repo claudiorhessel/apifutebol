@@ -8,7 +8,16 @@ class FixturesModel extends Model
 {
     public function getAllFixtures($params = [])
     {
-        READ->FullRead("SELECT * FROM `fixtures`");
+        $parseString = null;
+        $where = null;
+
+        if (count($params) > 0) {
+            $data = Helper::dbPrepateData($params);
+            $parseString = Helper::dbDataToParseString($data);
+            $where = Helper::dbDataToWhereOR($data);
+        }
+
+        READ->FullRead("SELECT * FROM `fixtures` " . $where, $parseString);
         if (READ->getRowCount() < 1) {
             return false;
         }
@@ -21,7 +30,7 @@ class FixturesModel extends Model
     {
         READ->FullRead("SELECT * 
             FROM `fixtures`
-            WHERE `fixtures`.`id` = " . $id
+            WHERE `fixtures`.`id` = :id" , "id={$id}"
         );
         if (READ->getRowCount() < 1) {
             return false;
@@ -43,7 +52,8 @@ class FixturesModel extends Model
 
     public function createFixture($data)
     {
-        DB_CREATE_CLASS->ExeCreate('fixtures', $data);
+        $dataToSave = Helper::dbPrepateData($data);
+        DB_CREATE_CLASS->ExeCreate('fixtures', $dataToSave);
         if (DB_CREATE_CLASS->getResult()) {
             $leagueId = DB_CREATE_CLASS->getResult();
             return $leagueId;
@@ -53,7 +63,8 @@ class FixturesModel extends Model
 
     public function updateFixture($id, $data)
     {
-        $parseString = Helper::dbDataToParseString($data, $id);
+        $dataToSave = Helper::dbPrepateData($data);
+        $parseString = Helper::dbDataToParseString($dataToSave, $id);
         DB_UPDATE_CLASS->ExeUpdate('fixtures', $data, "WHERE id = :id", $parseString);
         if (DB_UPDATE_CLASS->getResult()) {
             return true;

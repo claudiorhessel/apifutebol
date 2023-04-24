@@ -15,7 +15,16 @@ class TeamsModel extends Model
 
     public function getAllTeams($params = [])
     {
-        READ->FullRead("SELECT * FROM `teams`");
+        $parseString = null;
+        $where = null;
+
+        if (count($params) > 0) {
+            $data = Helper::dbPrepateData($params);
+            $parseString = Helper::dbDataToParseString($data);
+            $where = Helper::dbDataToWhereOR($data);
+        }
+
+        READ->FullRead("SELECT * FROM `teams` " . $where, $parseString);
         if (READ->getRowCount() < 1) {
             $return["status"] = false;
             $return["message"] = "Nenhum dado encontrado";
@@ -29,7 +38,7 @@ class TeamsModel extends Model
 
     public function getTeamById($id) 
     {
-        READ->FullRead("SELECT * FROM `teams` WHERE `id` = " . $id);
+        READ->FullRead("SELECT * FROM `teams` WHERE `id` = :id" , "id={$id}");
         if (READ->getRowCount() < 1) {
             $return["status"] = false;
             $return["message"] = "Nenhum dado encontrado";
@@ -43,7 +52,7 @@ class TeamsModel extends Model
 
     public function getTeamByLeagueId($leagueId)
     {
-        READ->FullRead("SELECT * FROM `teams` WHERE `league_id` = " . $leagueId);
+        READ->FullRead("SELECT * FROM `teams` WHERE `league_id` = :league_id", "league_id={$leagueId}");
         if (READ->getRowCount() < 1) {
             return false;
         }
@@ -55,7 +64,8 @@ class TeamsModel extends Model
 
     public function createTeam($data)
     {
-        DB_CREATE_CLASS->ExeCreate('teams', $data);
+        $dataToSave = Helper::dbPrepateData($data);
+        DB_CREATE_CLASS->ExeCreate('teams', $dataToSave);
         if (DB_CREATE_CLASS->getResult()) {
             $leagueId = DB_CREATE_CLASS->getResult();
             return $leagueId;
@@ -65,7 +75,8 @@ class TeamsModel extends Model
 
     public function updateTeam($id, $data)
     {
-        $parseString = Helper::dbDataToParseString($data, $id);
+        $dataToSave = Helper::dbPrepateData($data);
+        $parseString = Helper::dbDataToParseString($dataToSave, $id);
         DB_UPDATE_CLASS->ExeUpdate('teams', $data, "WHERE id = :id", $parseString);
         if (DB_UPDATE_CLASS->getResult()) {
             return true;

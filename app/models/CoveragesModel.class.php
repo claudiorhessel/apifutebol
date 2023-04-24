@@ -8,7 +8,16 @@ class CoveragesModel extends Model
 {
     public function getAllCoverages($params = [])
     {
-        READ->FullRead("SELECT * FROM `coverages`");
+        $parseString = null;
+        $where = null;
+
+        if (count($params) > 0) {
+            $data = Helper::dbPrepateData($params);
+            $parseString = Helper::dbDataToParseString($data);
+            $where = Helper::dbDataToWhereOR($data);
+        }
+
+        READ->FullRead("SELECT * FROM `coverages` " . $where, $parseString);
         if (READ->getRowCount() < 1) {
             return false;
         }
@@ -21,7 +30,7 @@ class CoveragesModel extends Model
     {
         READ->FullRead("SELECT * 
             FROM `coverages`
-            WHERE `coverages`.`id` = " . $id
+            WHERE `coverages`.`id` = :id" , "id={$id}"
         );
         if (READ->getRowCount() < 1) {
             return false;
@@ -43,7 +52,8 @@ class CoveragesModel extends Model
 
     public function createCoverage($data)
     {
-        DB_CREATE_CLASS->ExeCreate('coverages', $data);
+        $dataToSave = Helper::dbPrepateData($data);
+        DB_CREATE_CLASS->ExeCreate('coverages', $dataToSave);
         if (DB_CREATE_CLASS->getResult()) {
             $leagueId = DB_CREATE_CLASS->getResult();
             return $leagueId;
@@ -53,7 +63,8 @@ class CoveragesModel extends Model
 
     public function updateCoverage($id, $data)
     {
-        $parseString = Helper::dbDataToParseString($data, $id);
+        $dataToSave = Helper::dbPrepateData($data);
+        $parseString = Helper::dbDataToParseString($dataToSave, $id);
         DB_UPDATE_CLASS->ExeUpdate('coverages', $data, "WHERE id = :id", $parseString);
         if (DB_UPDATE_CLASS->getResult()) {
             return true;

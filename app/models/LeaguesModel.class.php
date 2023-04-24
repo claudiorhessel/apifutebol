@@ -10,7 +10,16 @@ class LeaguesModel extends Model
 
     public function getAllLeagues($params = [])
     {
-        READ->FullRead("SELECT * FROM `leagues`");
+        $parseString = null;
+        $where = null;
+
+        if (count($params) > 0) {
+            $data = Helper::dbPrepateData($params);
+            $parseString = Helper::dbDataToParseString($data);
+            $where = Helper::dbDataToWhereOR($data);
+        }
+
+        READ->FullRead("SELECT * FROM `leagues` " . $where, $parseString);
         if (READ->getRowCount() < 1) {
             return false;
         }
@@ -19,7 +28,7 @@ class LeaguesModel extends Model
         return $rows;
     }
 
-    public function getLeagueById($id)
+    public function getLeagueWithCoveragesAndFixturesById($id)
     {
         READ->FullRead("SELECT 
                 `leagues`.*,
@@ -32,8 +41,19 @@ class LeaguesModel extends Model
             FROM `leagues`
             LEFT JOIN `coverages` ON `leagues`.`id` = `coverages`.`league_id`
             LEFT JOIN `fixtures` ON `coverages`.`id` = `fixtures`.`coverage_id`
-            WHERE `leagues`.`id` = " . $id
+            WHERE `leagues`.`id` = :id" , "id={$id}"
         );
+        if (READ->getRowCount() < 1) {
+            return false;
+        }
+        $rows = READ->getResult();
+
+        return $rows;
+    }
+
+    public function getLeagueById($id)
+    {
+        READ->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`id` = :id" , "id={$id}");
         if (READ->getRowCount() < 1) {
             return false;
         }
@@ -54,7 +74,8 @@ class LeaguesModel extends Model
 
     public function createLeague($data)
     {
-        DB_CREATE_CLASS->ExeCreate('leagues', $data);
+        $dataToSave = Helper::dbPrepateData($data);
+        DB_CREATE_CLASS->ExeCreate('leagues', $dataToSave);
         if (DB_CREATE_CLASS->getResult()) {
             $leagueId = DB_CREATE_CLASS->getResult();
             return $leagueId;
@@ -64,7 +85,8 @@ class LeaguesModel extends Model
 
     public function updateLeague($id, $data)
     {
-        $parseString = Helper::dbDataToParseString($data, $id);
+        $dataToSave = Helper::dbPrepateData($data);
+        $parseString = Helper::dbDataToParseString($dataToSave, $id);
         DB_UPDATE_CLASS->ExeUpdate('leagues', $data, "WHERE id = :id", $parseString);
         if (DB_UPDATE_CLASS->getResult()) {
             return true;
