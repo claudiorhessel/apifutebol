@@ -42,17 +42,52 @@ class Helper
 
     public static function dbPrepateValue($value)
     {
-        $value = htmlspecialchars($value);
-        $value = addslashes($value);
+        if ($value != null) {
+            $value = htmlspecialchars($value);
+            $value = addslashes($value);
+        }
 
         return $value;
     }
 
-    public static function dbDataToParseString($data, $id)
+    public static function dbDataToParseString($data, $id = null)
     {
-        $returnData = 'id=' . $id;
+        $returnData = null;
+
+        if ($id != null) {
+            $returnData = 'id=' . $id;
+        }
+
         foreach($data as $key => $value) {
+            if ($value == null) {
+                continue;
+            }
+            if ($returnData == null) {
+                $returnData .= $key . '=' . $value;
+                continue;
+            }
+
             $returnData .= '&' .$key . '=' . $value;
+        }
+
+        return $returnData;
+    }
+
+    public static function dbDataToWhereOR($data)
+    {
+        $returnData = null;
+
+        foreach($data as $key => $value) {
+            if ($value == null) {
+                continue;
+            }
+
+            if ($returnData == null) {
+                $returnData .= " WHERE " . $key . " = :" . $key;
+                continue;
+            }
+
+            $returnData .= " OR " . $key . " = :" . $key;
         }
 
         return $returnData;
