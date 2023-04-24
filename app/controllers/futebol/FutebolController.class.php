@@ -41,7 +41,7 @@ class FutebolController extends Controller {
     public function leagueDetail($id)
     {
         $leaguesModel = new LeaguesModel;
-        $data = $leaguesModel->getLeagueById($id);
+        $data = $leaguesModel->getLeagueWithCoveragesAndFixturesById($id);
 
         if (!$data) {
             $return["status"] = false;
@@ -131,9 +131,7 @@ class FutebolController extends Controller {
             "is_current" => isset($_POST["is_current"])? $_POST["is_current"] : null
         ];
 
-        $dataLeagueToSave = Helper::dbPrepateData($dataLeague);
-
-        $leagueCreated = $leaguesModel->createLeague($dataLeagueToSave);
+        $leagueCreated = $leaguesModel->createLeague($dataLeague);
 
         if ($leagueCreated) {
             $dataCoverage = [
@@ -145,9 +143,7 @@ class FutebolController extends Controller {
                 "odds" => isset($_POST["odds"])? $_POST["odds"] : ""
             ];
 
-            $dataCoverageToSave = Helper::dbPrepateData($dataCoverage);
-
-            $coverageCreated = $coveragesModel->createCoverage($dataCoverageToSave);
+            $coverageCreated = $coveragesModel->createCoverage($dataCoverage);
 
             if ($coverageCreated) {
                 $dataFixture = [
@@ -158,9 +154,7 @@ class FutebolController extends Controller {
                     "players_statistics" => isset($_POST["players_statistics"])? $_POST["players_statistics"] : ""
                 ];
 
-                $dataFixtureToSave = Helper::dbPrepateData($dataFixture);
-
-                $fixtureCreated = $fixturesModel->createFixture($dataFixtureToSave);
+                $fixtureCreated = $fixturesModel->createFixture($dataFixture);
 
                 if ($fixtureCreated) {
                     $ids = [
@@ -211,9 +205,7 @@ class FutebolController extends Controller {
             "is_current" => isset($_POST["is_current"])? $_POST["is_current"] : null
         ];
 
-        $dataLeagueToUpdate = Helper::dbPrepateData($dataLeague);
-
-        $leagueUpdated = $leaguesModel->updateLeague($leagueId, $dataLeagueToUpdate);
+        $leagueUpdated = $leaguesModel->updateLeague($leagueId, $dataLeague);
 
         if ($leagueUpdated) {
             $coverageId = $_POST["coverage_id"];
@@ -226,9 +218,7 @@ class FutebolController extends Controller {
                 "odds" => isset($_POST["odds"])? $_POST["odds"] : ""
             ];
 
-            $dataCoverageToSave = Helper::dbPrepateData($dataCoverage);
-
-            $coverageUpdated = $coveragesModel->updateCoverage($coverageId, $dataCoverageToSave);
+            $coverageUpdated = $coveragesModel->updateCoverage($coverageId, $dataCoverage);
 
             if ($coverageUpdated) {
                 $fixtureId = $_POST["fixture_id"];
@@ -241,9 +231,7 @@ class FutebolController extends Controller {
                     "players_statistics" => isset($_POST["players_statistics"])? $_POST["players_statistics"] : ""
                 ];
 
-                $dataFixtureToSave = Helper::dbPrepateData($dataFixture);
-
-                $fixtureUpdated = $fixturesModel->updateFixture($fixtureId, $dataFixtureToSave);
+                $fixtureUpdated = $fixturesModel->updateFixture($fixtureId, $dataFixture);
 
                 if ($fixtureUpdated) {
                     $ids = [
@@ -301,9 +289,7 @@ class FutebolController extends Controller {
             "venue_capacity" => isset($_POST["venue_capacity"])? $_POST["venue_capacity"] : null
         ];
 
-        $dataTeamToSave = Helper::dbPrepateData($dataTeam);
-
-        $teamCreated = $teamsModel->createTeam($dataTeamToSave);
+        $teamCreated = $teamsModel->createTeam($dataTeam);
 
         if ($teamCreated) {
             $status = true;
