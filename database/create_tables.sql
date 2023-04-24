@@ -1,34 +1,5 @@
-uSE `futebol`;
-DROP TABLE IF EXISTS `fixtures`;
-CREATE TABLE IF NOT EXISTS `fixtures` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`events` TINYINT(1) NULL DEFAULT NULL,
-	`lineups` TINYINT(1) NULL DEFAULT NULL,
-	`statistics` TINYINT(1) NULL DEFAULT NULL,
-	`players_statistics` TINYINT(1) NULL DEFAULT NULL,
-	`createdAt` DATETIME DEFAULT NULL,
-	`updatedAt` DATETIME DEFAULT NULL,
-	`deletedAt` DATETIME DEFAULT NULL,
-	PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `coverages`;
-CREATE TABLE IF NOT EXISTS `coverages` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`standings` TINYINT(1) NULL DEFAULT NULL,
-	`fixture_id` bigint(20) NULL DEFAULT NULL,
-	`players` TINYINT(1) NULL DEFAULT NULL,
-	`top_scorers` TINYINT(1) NULL DEFAULT NULL,
-	`predictions` TINYINT(1) NULL DEFAULT NULL,
-	`odds` TINYINT(1) NULL DEFAULT NULL,
-	`createdAt` DATETIME DEFAULT NULL,
-	`updatedAt` DATETIME DEFAULT NULL,
-	`deletedAt` DATETIME DEFAULT NULL,
-	PRIMARY KEY (`id`),
-  	KEY `fk_coverages_fixture_id_foreign` (`fixture_id`),
-  	CONSTRAINT `fk_coverages_fixture_id_foreign` FOREIGN KEY (`fixture_id`) REFERENCES `fixtures` (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
+USE `futebol`;
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS leagues;
 CREATE TABLE IF NOT EXISTS `leagues` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT ,
@@ -44,22 +15,53 @@ CREATE TABLE IF NOT EXISTS `leagues` (
 	`flag` VARCHAR(255) NULL DEFAULT NULL,
 	`standings` TINYINT(1) NULL DEFAULT NULL,
 	`is_current` TINYINT(1) NULL DEFAULT NULL,
-  	`coverage_id` bigint(20) NULL DEFAULT NULL,
 	`createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 	`deletedAt` DATETIME DEFAULT NULL,
-	CONSTRAINT `UC_Referal_League` UNIQUE (`referal_league_id`),
 	PRIMARY KEY (`id`),
-  	KEY `leagues_coverage_id_foreign` (`coverage_id`),
-  	CONSTRAINT `leagues_coverage_id_foreign` FOREIGN KEY (`coverage_id`) REFERENCES `coverages` (`id`),
+	CONSTRAINT `UC_Referal_League` UNIQUE (`referal_league_id`),
   	INDEX (`referal_league_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `coverages`;
+CREATE TABLE IF NOT EXISTS `coverages` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`league_id` bigint(20) NOT NULL,
+	`standings` TINYINT(1) NULL DEFAULT NULL,
+	`players` TINYINT(1) NULL DEFAULT NULL,
+	`top_scorers` TINYINT(1) NULL DEFAULT NULL,
+	`predictions` TINYINT(1) NULL DEFAULT NULL,
+	`odds` TINYINT(1) NULL DEFAULT NULL,
+	`createdAt` DATETIME DEFAULT NULL,
+	`updatedAt` DATETIME DEFAULT NULL,
+	`deletedAt` DATETIME DEFAULT NULL,
+	PRIMARY KEY (`id`),
+  	KEY `fk_coverages_league_id_foreign` (`league_id`),
+  	CONSTRAINT `fk_coverages_league_id_foreign` FOREIGN KEY (`league_id`) REFERENCES `leagues` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `fixtures`;
+CREATE TABLE IF NOT EXISTS `fixtures` (
+	`id` bigint(20) NOT NULL AUTO_INCREMENT,
+	`coverage_id` bigint(20) NOT NULL,
+	`events` TINYINT(1) NULL DEFAULT NULL,
+	`lineups` TINYINT(1) NULL DEFAULT NULL,
+	`statistics` TINYINT(1) NULL DEFAULT NULL,
+	`players_statistics` TINYINT(1) NULL DEFAULT NULL,
+	`createdAt` DATETIME DEFAULT NULL,
+	`updatedAt` DATETIME DEFAULT NULL,
+	`deletedAt` DATETIME DEFAULT NULL,
+	PRIMARY KEY (`id`),
+  	KEY `fk_fixtures_coverage_id_foreign` (`coverage_id`),
+  	CONSTRAINT `fk_fixtures_coverage_id_foreign` FOREIGN KEY (`coverage_id`) REFERENCES `coverages` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `teams`;
 CREATE TABLE IF NOT EXISTS `teams` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`referal_league_id` bigint(20) NOT NULL,
-	`referal_team_id` bigint(20) NOT NULL,
+	`league_id` bigint(20) NOT NULL,
+	`referal_league_id` bigint(20) NULL DEFAULT NULL,
+	`referal_team_id` bigint(20) NULL DEFAULT NULL,
 	`name` VARCHAR(255) NOT NULL,
 	`code` VARCHAR(255) NULL DEFAULT NULL,
 	`logo` VARCHAR(255) NULL DEFAULT NULL,
@@ -74,19 +76,10 @@ CREATE TABLE IF NOT EXISTS `teams` (
 	`createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 	`deletedAt` DATETIME DEFAULT NULL,
+	PRIMARY KEY (`id`),
+  	INDEX (`referal_league_id`, `referal_team_id`),
+  	KEY `fk_teams_league_id_foreign` (`league_id`),
 	CONSTRAINT `UC_Referal_Team` UNIQUE (`referal_league_id`, `referal_team_id`),
-	PRIMARY KEY (`id`),
-  	INDEX (`referal_league_id`, `referal_team_id`)
+  	CONSTRAINT `fk_teams_league_id_foreign` FOREIGN KEY (`league_id`) REFERENCES `leagues` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `league_teams`;
-CREATE TABLE IF NOT EXISTS `league_teams` (
-	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`league_id` bigint(20) NOT NULL,
-	`team_id` bigint(20) NOT NULL,
-	PRIMARY KEY (`id`),
-  	KEY `fk_league_teams_league_id_foreign` (`league_id`),
-  	KEY `fk_league_teams_team_id_foreign` (`team_id`),
-  	CONSTRAINT `fk_league_teams_league_id_foreign` FOREIGN KEY (`league_id`) REFERENCES `leagues` (`id`),
-  	CONSTRAINT `fk_league_teams_team_id_foreign` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+SET FOREIGN_KEY_CHECKS = 1;
