@@ -59,7 +59,7 @@ class Helper
         }
 
         foreach($data as $key => $value) {
-            if ($value == null) {
+            if ($value == null || $value == "" || mb_strlen($value) == 0) {
                 continue;
             }
             if ($returnData == null) {
@@ -78,7 +78,7 @@ class Helper
         $returnData = null;
 
         foreach($data as $key => $value) {
-            if ($value == null) {
+            if ($value == null || $value == "" || mb_strlen($value) == 0) {
                 continue;
             }
 
