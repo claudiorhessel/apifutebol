@@ -15,7 +15,9 @@ class LeaguesApi extends Controller {
             "name" => isset($_GET["name"])? $_GET["name"] : null,
             "type" => isset($_GET["type"])? $_GET["type"] : null,
             "country" => isset($_GET["country"])? $_GET["country"] : null,
-            "season" => isset($_GET["season"])? $_GET["season"] : null
+            "season" => isset($_GET["season"])? $_GET["season"] : null,
+            "season_start" => isset($_GET["season_start"])? $_GET["season_start"] : null,
+            "season_end" => isset($_GET["season_end"])? $_GET["season_end"] : null
         ];
 
         $leaguesModel = new LeaguesModel;
