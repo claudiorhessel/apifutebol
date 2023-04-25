@@ -3,8 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require("../config/App.php");
-require("../app/services/rapidapi/api-football/v2/ApiFutebolService.class.php");
+require_once("../config/App.php");
+require_once("../app/services/rapidapi/api-football/v2/ApiFutebolService.class.php");
 class ApiFutebolSeeder
 {
     public function seed()

@@ -13,6 +13,15 @@ if (isset($_GET["seed"]) && $_GET["seed"] == true) {
     die();
 }
 
+if (isset($_GET["migrate"]) && $_GET["migrate"] == true) {
+    require_once("../database/ApiFutebolMigrate.class.php");
+    $result = (new ApiFutebolMigrate)->migrate();
+    echo "<pre>";
+    var_dump($result);
+    echo "<pre />";
+    die();
+}
+
 use app\core\Router;
 
 require_once("../config/config.php");

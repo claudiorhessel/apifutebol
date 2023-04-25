@@ -19,7 +19,8 @@
                     <div class="card-body">
                         <a href="leagues_list" class="btn btn-primary float-end">Ligas</a>
                         <a href="teams_list" class="btn btn-primary float-end">Times</a>
-                        <a href="seeder" class="btn btn-primary float-end">Seeder</a>
+                        <a href="?seed=true" class="btn btn-primary float-end">Seed</a>
+                        <a href="?migrate=true" class="btn btn-primary float-end">Migrate</a>
                     </div>
                 </div>
             </div>

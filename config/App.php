@@ -16,6 +16,7 @@ require_once(ROOT_PATH . '/config/conn/Delete.class.php');
 require_once(ROOT_PATH . '/config/conn/Read.class.php');
 require_once(ROOT_PATH . '/config/conn/Query.class.php');
 require_once(ROOT_PATH . '/config/conn/Update.class.php');
+require_once(ROOT_PATH . '/config/conn/Ddl.class.php');
 
 
 

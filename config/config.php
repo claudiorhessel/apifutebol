@@ -8,10 +8,9 @@ define('DEBUG_URI', false);
 define('VIEWS', BASE . '/app/views/');
 
 define('DB_HOST', 'localhost');
+define('DB_NAME', 'futebol');
 define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'mini-framework');
-
+define('DB_PASS', 'root');
 
 require_once(BASE . "/config/App.php");
 
