@@ -11,43 +11,40 @@ class LeagueValidations extends Validation
     {
         $return = [];
         if ($this->int("referal_league_id", $params["referal_league_id"])) {
-            $return[] = $this->int("referal_league_id", $params["referal_league_id"]);
+            $return["referal_league_id"][] = $this->int("referal_league_id", $params["referal_league_id"]);
         }
         if ($this->required("name", $params["name"])) {
-            $return[] = $this->required("name", $params["name"]);
+            $return["name"][] = $this->required("name", $params["name"]);
         }
         if ($this->required("type", $params["type"])) {
-            $return[] = $this->required("type", $params["type"]);
+            $return["type"][] = $this->required("type", $params["type"]);
         }
         if ($this->required("country", $params["country"])) {
-            $return[] = $this->required("country", $params["country"]);
+            $return["country"][] = $this->required("country", $params["country"]);
         }
         if ($this->required("country_code", $params["country_code"])) {
-            $return[] = $this->required("country_code", $params["country_code"]);
+            $return["country_code"][] = $this->required("country_code", $params["country_code"]);
         }
         if ($this->required("season", $params["season"])) {
-            $return[] = $this->required("season", $params["season"]);
+            $return["season"][] = $this->required("season", $params["season"]);
         }
         if ($this->int("season", $params["season"])) {
-            $return[] = $this->int("season", $params["season"]);
+            $return["season"][] = $this->int("season", $params["season"]);
         }
-        if ($this->int("season", $params["season"])) {
-            $return[] = $this->max("season", $params["season"], '4');
-        }
-        if ($this->int("season", $params["season"])) {
-            $return[] = $this->min("season", $params["season"], '4');
+        if ($this->size("season", $params["season"], 4)) {
+            $return["season"][] = $this->size("season", $params["season"], 4);
         }
         if ($this->required("season_start", $params["season_start"])) {
-            $return[] = $this->required("season_start", $params["season_start"]);
+            $return["season_start"][] = $this->required("season_start", $params["season_start"]);
         }
         if ($this->required("season_start", $params["season_start"])) {
-            $return[] = $this->date("season_start", $params["season_start"]);
+            $return["season_start"][] = $this->date("season_start", $params["season_start"]);
         }
         if ($this->required("season_end", $params["season_end"])) {
-            $return[] = $this->required("season_end", $params["season_end"]);
+            $return["season_end"][] = $this->required("season_end", $params["season_end"]);
         }
         if ($this->required("season_end", $params["season_end"])) {
-            $return[] = $this->date("season_end", $params["season_end"]);
+            $return["season_end"][] = $this->date("season_end", $params["season_end"]);
         }
 
         if (count($return)) {
@@ -84,11 +81,8 @@ class LeagueValidations extends Validation
         if ($this->int("season", $params["season"])) {
             $return[] = $this->int("season", $params["season"]);
         }
-        if ($this->int("season", $params["season"])) {
-            $return[] = $this->max("season", $params["season"], '4');
-        }
-        if ($this->int("season", $params["season"])) {
-            $return[] = $this->min("season", $params["season"], '4');
+        if ($this->size("season", $params["season"], 4)) {
+            $return[] = $this->size("season", $params["season"], 4);
         }
         if ($this->required("season_start", $params["season_start"])) {
             $return[] = $this->required("season_start", $params["season_start"]);
