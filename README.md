@@ -36,6 +36,8 @@ Primeiramente deve-se baixar o projeto em seu ambiente a partido do git:
 ~$bash git clone -b master https://github.com/claudiorhessel/apifutebol.git
 ```
 
+Não utilizei qualque biblioteca ou dependência que precisa ser instalada para o sistema funcionar, a intenção do projeto e fazer todos os itens somente com PHP, Bootstrap e MySQL.
+
 Depois criar um virtual host apontado para a raiz do projeto. Caso você não saiba como fazer isso favor visualizar o passo-a-passo do link abaixo:
 
 [https://marcelo-albuquerque.medium.com/como-configurar-virtual-hosts-no-wsl-2-com-ubuntu-20-04-f9423829f3a6](https://marcelo-albuquerque.medium.com/como-configurar-virtual-hosts-no-wsl-2-com-ubuntu-20-04-f9423829f3a6)
@@ -51,14 +53,24 @@ $banco = 'futebol';
 $usuario = 'root';
 $senha = 'root';
 ```
+Também o arquivo abaixo:
+
+[https://github.com/claudiorhessel/apifutebol/blob/master/config/config.php](https://github.com/claudiorhessel/apifutebol/blob/master/config/config.php)
+
+```
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'futebol');
+define('DB_USER', 'root');
+define('DB_PASS', 'root');
+```
 
 Utilizar o arquivo abaixo para criação do banco de dados:
 
 [https://github.com/claudiorhessel/apifutebol/blob/master/database/create_tables.sql](https://github.com/claudiorhessel/apifutebol/blob/master/database/create_tables.sql)
 
-Executar a URL abaixo para que o seeder seja executado:
+Ou utilizar o botão "Migrate" da tela inicial.
 
-[DOMINIO]/seed=true
+Também deve-se utilizado o botão "Seed" da tela inicial para se baixar os dados da API externa e salvar no banco de dados.
 
 Se tudo estiver corrigo conforme o esperado ao acessar a URL do projeto a tela inicial será exibida:
 
