@@ -99,7 +99,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -132,7 +131,7 @@
                                                     <a href="league_detail/<?= $ligas['id']; ?>" class="btn btn-info btn-sm">Detalhes</a>
                                                     <button
                                                         type="button"
-                                                        class="btn btn-danger btn-sm"
+                                                        class="btn btn-danger btn-sm open-league_modal"
                                                         data-toggle="modal"
                                                         data-target="#leagueModal"
                                                         data-league_id="<?= $ligas['id']; ?>"
@@ -142,28 +141,6 @@
                                                     </button>
                                                 </td>
                                             </tr>
-
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="leagueModal" tabindex="-1" role="dialog" aria-labelledby="leagueModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="leagueModalLabel">Confirma deletar liga?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Você relamente deseja deletar esta liga?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                    <form action="league_delete/<?= $ligas['id']; ?>" method="POST" class="d-inline" name="modalForm">
-                                                        <button type="submit" class="btn btn-danger">Confirmar Deletar</button>
-                                                    </form>
-                                                </div>
-                                                </div>
-                                            </div>
                                             <?php
                                         }
                                     }
@@ -175,14 +152,43 @@
                                 
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="leagueModal" tabindex="-1" role="dialog" aria-labelledby="leagueModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leagueModalLabel">Confirma deletar liga?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você relamente deseja deletar esta liga?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="modelLeagueForm" method="POST" class="d-inline" name="modalForm">
+                    <button type="submit" class="btn btn-danger">Confirmar Deletar</button>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(document).on("click", ".open-league_modal", function () {
+            var leagueId = $(this).data('league_id');
+            var action = "league_delete/" + leagueId;
+            $('#modelLeagueForm').attr('action', action);
+        });
+    </script>
 </body>
 </html>
 <?php
