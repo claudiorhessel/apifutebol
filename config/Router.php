@@ -2,18 +2,19 @@
 
 $this->get('/', 'futebol\FutebolController@index');
 
-$this->get('/leagues_list', 'futebol\FutebolController@listLeagues');
-$this->get('/league_detail/{id}', 'futebol\FutebolController@leagueDetail');
-$this->get('/league_add', 'futebol\FutebolController@leagueAdd');
-$this->post('/league_save', 'futebol\FutebolController@leagueSave');
-$this->post('/league_update/{id}', 'futebol\FutebolController@leagueUpdate');
+$this->get('/leagues_list', 'futebol\LeaguesController@listLeagues');
+$this->get('/league_detail/{id}', 'futebol\LeaguesController@leagueDetail');
+$this->get('/league_add', 'futebol\LeaguesController@leagueAdd');
+$this->post('/league_save', 'futebol\LeaguesController@leagueSave');
+$this->post('/league_update/{id}', 'futebol\LeaguesController@leagueUpdate');
+$this->post('/league_delete/{id}', 'futebol\LeaguesController@leagueDelete');
 
-$this->get('/teams_list', 'futebol\FutebolController@listTeams');
-$this->get('/team_detail/{id}', 'futebol\FutebolController@teamDetail');
-$this->get('/team_detail/{id}/{leagueId}', 'futebol\FutebolController@teamDetail');
-$this->get('/team_add', 'futebol\FutebolController@teamAdd');
-$this->post('/team_save', 'futebol\FutebolController@teamSave');
-$this->post('/team_update', 'futebol\FutebolController@teamUpdate');
+$this->get('/teams_list', 'futebol\TeamsController@listTeams');
+$this->get('/team_detail/{id}', 'futebol\TeamsController@teamDetail');
+$this->get('/team_add', 'futebol\TeamsController@teamAdd');
+$this->post('/team_save', 'futebol\TeamsController@teamSave');
+$this->post('/team_update', 'futebol\TeamsController@teamUpdate');
+$this->post('/team_delete/{id}', 'futebol\TeamsController@teamDelete');
 
 $this->get('/api/v1/leagues', 'api\v1\LeaguesApi@index');
 $this->get('/api/v1/leagues/{id}', 'api\v1\LeaguesApi@show');
