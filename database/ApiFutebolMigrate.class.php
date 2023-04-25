@@ -94,10 +94,9 @@ class ApiFutebolMigrate
             `updatedAt` DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
             `deletedAt` DATETIME DEFAULT NULL,
             PRIMARY KEY (`id`),
-              INDEX (`referal_league_id`, `referal_team_id`),
-              KEY `fk_teams_league_id_foreign` (`league_id`),
-            CONSTRAINT `UC_Referal_Team` UNIQUE (`referal_league_id`, `referal_team_id`),
-              CONSTRAINT `fk_teams_league_id_foreign` FOREIGN KEY (`league_id`) REFERENCES `leagues` (`id`)
+            INDEX (`referal_league_id`, `referal_team_id`),
+            KEY `fk_teams_league_id_foreign` (`league_id`),
+            CONSTRAINT `fk_teams_league_id_foreign` FOREIGN KEY (`league_id`) REFERENCES `leagues` (`id`)
         )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         SET FOREIGN_KEY_CHECKS = 1;
         ";
