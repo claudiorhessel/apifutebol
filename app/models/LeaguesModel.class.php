@@ -20,11 +20,10 @@ class LeaguesModel extends Model
         }
 
         if (!$showDeleted) {
-            $parseString .= "&deletedAt=null";
-            $where .= " AND `deletedAt` <=> :deletedAt";
-            if (count($params) == 0) {
-                $parseString = "";
+            if ($where == null) {
                 $where = " WHERE `deletedAt` is null";
+            } else {
+                $where .= " AND `deletedAt` is null";
             }
         }
 
