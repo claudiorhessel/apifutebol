@@ -109,6 +109,9 @@
                             </div>
                         </div>
                         <div class="card-body">
+                        <?php
+                            if($params["status"]) {
+                        ?>
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -123,8 +126,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                        if(isset($params["data"])) {
-                                            foreach($params["data"] as $time) {
+                                        foreach($params["data"] as $time) {
                                     ?>
                                     <tr>
                                         <td><?= $time['referal_team_id']; ?></td>
@@ -147,40 +149,41 @@
                                             </button>
                                         </td>
                                     </tr>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="teamModal" tabindex="-1" role="dialog" aria-labelledby="teamModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="teamModalLabel">Confirma deletar time?</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Você relamente deseja deletar este time?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                <form id="modelteamForm" method="POST" class="d-inline" name="modalForm">
-                                                    <button type="submit" class="btn btn-danger">Confirmar Deletar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <?php
-                                            }
-                                        } else {
-                                            echo "<h5> Nenhum dado cadastrado </h5>";
                                         }
                                     ?>
-                                    
                                 </tbody>
                             </table>
+                            <?php
+                                } else {
+                                    echo "<h5> Nenhum dado cadastrado </h5>";
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="teamModal" tabindex="-1" role="dialog" aria-labelledby="teamModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="teamModalLabel">Confirma deletar time?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você relamente deseja deletar este time?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="modelteamForm" method="POST" class="d-inline" name="modalForm">
+                    <button type="submit" class="btn btn-danger">Confirmar Deletar</button>
+                </form>
             </div>
         </div>
     </div>

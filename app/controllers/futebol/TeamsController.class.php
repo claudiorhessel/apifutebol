@@ -16,6 +16,7 @@ class TeamsController extends Controller {
             "name" => isset($_GET["name"])? $_GET["name"] : null,
             "founded" => isset($_GET["founded"])? $_GET["founded"] : null,
             "referal_team_id" => isset($_GET["referal_team_id"])? $_GET["referal_team_id"] : null,
+            "referal_league_id" => isset($_GET["referal_league_id"])? $_GET["referal_league_id"] : null,
             "code" => isset($_GET["code"])? $_GET["code"] : null,
             "venue_name" => isset($_GET["venue_name"])? $_GET["venue_name"] : null
         ];
@@ -23,9 +24,17 @@ class TeamsController extends Controller {
         $teamsModel = new TeamsModel;
         $data = $teamsModel->getAllTeams($params);
 
+        $status = false;
+        $message = "Error";
+
+        if ($data) {
+            $status = true;
+            $message = "OK";
+        }
+
         $this->load('apifutebol/teams_list', [
-            'status' => true,
-            'message' => "OK",
+            'status' => $status,
+            'message' => $message,
             'data' => $data,
             'search' => $params
         ]);

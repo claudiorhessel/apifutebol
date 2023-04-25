@@ -35,10 +35,7 @@ class TeamsModel extends Model
 
         READ->FullRead("SELECT * FROM `teams` " . $where, $parseString);
         if (READ->getRowCount() < 1) {
-            $return["status"] = false;
-            $return["message"] = "Nenhum dado encontrado";
-
-            return $return;
+            return false;
         }
         $rows = READ->getResult();
 

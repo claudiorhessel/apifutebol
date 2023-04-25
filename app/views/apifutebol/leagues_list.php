@@ -99,6 +99,10 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <?php 
+                            if($params["status"])
+                            {
+                        ?>
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -114,44 +118,43 @@
                             </thead>
                             <tbody>
                                 <?php 
-                                    if($params["status"])
+                                    foreach($params['data'] as $ligas)
                                     {
-                                        foreach($params['data'] as $ligas)
-                                        {
-                                            ?>
-                                            <tr>
-                                                <td><?= $ligas['referal_league_id']; ?></td>
-                                                <td><?= $ligas['name']; ?></td>
-                                                <td><?= $ligas['country']; ?></td>
-                                                <td><?= $ligas['country_code']; ?></td>
-                                                <td><?= $ligas['season']; ?></td>
-                                                <td><?= $ligas['season_start']; ?></td>
-                                                <td><?= $ligas['season_end']; ?></td>
-                                                <td>
-                                                    <a href="league_detail/<?= $ligas['id']; ?>" class="btn btn-info btn-sm">Detalhes</a>
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-danger btn-sm open-league_modal"
-                                                        data-toggle="modal"
-                                                        data-target="#leagueModal"
-                                                        data-league_id="<?= $ligas['id']; ?>"
-                                                        name="delete_modal_button"
-                                                    >
-                                                        Deletar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                    }
-                                    else
-                                    {
-                                        echo "<h5> Nenhum dado cadastrado </h5>";
+                                        ?>
+                                        <tr>
+                                            <td><?= $ligas['referal_league_id']; ?></td>
+                                            <td><?= $ligas['name']; ?></td>
+                                            <td><?= $ligas['country']; ?></td>
+                                            <td><?= $ligas['country_code']; ?></td>
+                                            <td><?= $ligas['season']; ?></td>
+                                            <td><?= $ligas['season_start']; ?></td>
+                                            <td><?= $ligas['season_end']; ?></td>
+                                            <td>
+                                                <a href="league_detail/<?= $ligas['id']; ?>" class="btn btn-info btn-sm">Detalhes</a>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-danger btn-sm open-league_modal"
+                                                    data-toggle="modal"
+                                                    data-target="#leagueModal"
+                                                    data-league_id="<?= $ligas['id']; ?>"
+                                                    name="delete_modal_button"
+                                                >
+                                                    Deletar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <?php
                                     }
                                 ?>
-                                
                             </tbody>
                         </table>
+                        <?php
+                            }
+                            else
+                            {
+                                echo "<h5> Nenhum dado cadastrado </h5>";
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
