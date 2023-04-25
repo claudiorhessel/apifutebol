@@ -13,7 +13,7 @@ $this->get('/teams_list', 'futebol\TeamsController@listTeams');
 $this->get('/team_detail/{id}', 'futebol\TeamsController@teamDetail');
 $this->get('/team_add', 'futebol\TeamsController@teamAdd');
 $this->post('/team_save', 'futebol\TeamsController@teamSave');
-$this->post('/team_update', 'futebol\TeamsController@teamUpdate');
+$this->post('/team_update/{id}', 'futebol\TeamsController@teamUpdate');
 $this->post('/team_delete/{id}', 'futebol\TeamsController@teamDelete');
 
 $this->get('/api/v1/leagues', 'api\v1\LeaguesApi@index');
