@@ -2,6 +2,7 @@
 namespace app\core;
 
 use DateTime;
+use Helper;
 
 class Validation
 {
@@ -25,7 +26,7 @@ class Validation
 
     public function integer($field, $value)
     {
-        if (!is_int($value)) {
+        if (!is_int(intval($value))) {
             return [
                 "field" => $field,
                 "value" => $value,
@@ -85,8 +86,9 @@ class Validation
 
     public function max($field, $value, $maxLenght = 255)
     {
-        $validete = mb_strlen($value >= $maxLenght);
-        if ($validete) {
+        $validate = mb_strlen($value) >= $maxLenght;
+
+        if ($validate) {
             return [
                 "field" => $field,
                 "value" => $value,
@@ -99,12 +101,28 @@ class Validation
 
     public function min($field, $value, $minLenght = 3)
     {
-        $validete = mb_strlen($value <= $minLenght);
-        if ($validete) {
+        $validate = mb_strlen($value) <= $minLenght;
+
+        if ($validate) {
             return [
                 "field" => $field,
                 "value" => $value,
                 "message" => "'{$field}' deve ter no mínimo '{$minLenght}' caracteres"
+            ];
+        }
+
+        return false;
+    }
+
+    public function size($field, $value, $minLenght = 4)
+    {
+        $validate = mb_strlen($value) != $minLenght;
+
+        if ($validate) {
+            return [
+                "field" => $field,
+                "value" => $value,
+                "message" => "'{$field}' deve ter '{$minLenght}' caracteres"
             ];
         }
 
