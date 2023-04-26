@@ -1,16 +1,29 @@
 <?php
 
 namespace app\models;
+
+require_once("../config/App.php");
+
+use Create;
+use Read;
+use Update;
 use app\core\Model;
 use Helper;
 
 class TeamsModel extends Model
 {
+    public $read;
+    public $update;
+    public $create;
+
     protected $table = 'teams';
 
     public function __construct()
     {
         parent::setTable($this->table);
+        $this->read = new Read;
+        $this->update = new Update;
+        $this->create = new Create;
     }
 
     public function getAllTeams($params = [], $showDeleted = false)
@@ -33,11 +46,11 @@ class TeamsModel extends Model
             }
         }
 
-        READ->FullRead("SELECT * FROM `teams` " . $where, $parseString);
-        if (READ->getRowCount() < 1) {
+        $this->read->FullRead("SELECT * FROM `teams` " . $where, $parseString);
+        if ($this->read->getRowCount() < 1) {
             return false;
         }
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -51,14 +64,14 @@ class TeamsModel extends Model
             $where .= " AND `deletedAt` IS NULL";
         }
 
-        READ->FullRead("SELECT * FROM `teams` WHERE `id` = :id " . $where, "id={$id}" . $parseString);
-        if (READ->getRowCount() < 1) {
+        $this->read->FullRead("SELECT * FROM `teams` WHERE `id` = :id " . $where, "id={$id}" . $parseString);
+        if ($this->read->getRowCount() < 1) {
             $return["status"] = false;
             $return["message"] = "Nenhum dado encontrado";
 
             return $return;
         }
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -70,12 +83,12 @@ class TeamsModel extends Model
             $where .= " AND `deletedAt` IS NULL";
         }
 
-        READ->FullRead("SELECT * FROM `teams` WHERE `league_id` = :league_id " . $where, "league_id={$leagueId}");
-        if (READ->getRowCount() < 1) {
+        $this->read->FullRead("SELECT * FROM `teams` WHERE `league_id` = :league_id " . $where, "league_id={$leagueId}");
+        if ($this->read->getRowCount() < 1) {
             return false;
         }
 
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -83,9 +96,9 @@ class TeamsModel extends Model
     public function createTeam($data)
     {
         $dataToSave = Helper::dbPrepateData($data);
-        DB_CREATE_CLASS->ExeCreate('teams', $dataToSave);
-        if (DB_CREATE_CLASS->getResult()) {
-            $leagueId = DB_CREATE_CLASS->getResult();
+        $this->create->ExeCreate('teams', $dataToSave);
+        if ($this->create->getResult()) {
+            $leagueId = $this->create->getResult();
             return $leagueId;
         }
         return false;
@@ -95,8 +108,8 @@ class TeamsModel extends Model
     {
         $dataToSave = Helper::dbPrepateData($data);
         $parseString = Helper::dbDataToParseString($dataToSave, $id);
-        DB_UPDATE_CLASS->ExeUpdate('teams', $data, "WHERE id = :id", $parseString);
-        if (DB_UPDATE_CLASS->getResult()) {
+        $this->update->ExeUpdate('teams', $data, "WHERE id = :id", $parseString);
+        if ($this->update->getResult()) {
             return true;
         }
         return false;

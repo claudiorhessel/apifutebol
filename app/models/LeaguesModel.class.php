@@ -1,12 +1,30 @@
 <?php
 
 namespace app\models;
+
+require_once("../config/App.php");
+
+use Create;
+use Read;
+use Update;
 use app\core\Model;
 use Helper;
 
 class LeaguesModel extends Model
 {
     protected $table = 'leagues';
+
+    public $read;
+    public $update;
+    public $create;
+
+    public function __construct()
+    {
+        parent::setTable($this->table);
+        $this->read = new Read;
+        $this->update = new Update;
+        $this->create = new Create;
+    }
 
     public function getAllLeagues($params = [], $showDeleted = false)
     {
@@ -27,11 +45,11 @@ class LeaguesModel extends Model
             }
         }
 
-        READ->FullRead("SELECT * FROM `leagues` " . $where, $parseString);
-        if (READ->getRowCount() < 1) {
+        $this->read->FullRead("SELECT * FROM `leagues` " . $where, $parseString);
+        if ($this->read->getRowCount() < 1) {
             return false;
         }
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -43,7 +61,7 @@ class LeaguesModel extends Model
             $where .= " AND `leagues`.`deletedAt` IS NULL";
         }
 
-        READ->FullRead("SELECT 
+        $this->read->FullRead("SELECT 
                 `leagues`.*,
                 `leagues`.`id` as `league_id`,
                 `coverages`.*,
@@ -56,10 +74,10 @@ class LeaguesModel extends Model
             LEFT JOIN `fixtures` ON `coverages`.`id` = `fixtures`.`coverage_id`
             WHERE `leagues`.`id` = :id" , "id={$id} . $where"
         );
-        if (READ->getRowCount() < 1) {
+        if ($this->read->getRowCount() < 1) {
             return false;
         }
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -71,11 +89,11 @@ class LeaguesModel extends Model
             $where .= " AND `deletedAt` IS NULL";
         }
 
-        READ->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`id` = :id " . $where , "id={$id}");
-        if (READ->getRowCount() < 1) {
+        $this->read->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`id` = :id " . $where , "id={$id}");
+        if ($this->read->getRowCount() < 1) {
             return false;
         }
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -87,11 +105,11 @@ class LeaguesModel extends Model
             $where .= " AND `deletedAt` IS NULL";
         }
 
-        READ->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`referal_league_id` = :id " . $where , "id={$id}");
-        if (READ->getRowCount() < 1) {
+        $this->read->FullRead("SELECT * FROM `leagues` WHERE `leagues`.`referal_league_id` = :id " . $where , "id={$id}");
+        if ($this->read->getRowCount() < 1) {
             return false;
         }
-        $rows = READ->getResult();
+        $rows = $this->read->getResult();
 
         return $rows;
     }
@@ -99,8 +117,8 @@ class LeaguesModel extends Model
     public function deleteLeagueById($id)
     {
         $data['deletedAt'] = date('Y-m-d H:i:s');
-        DB_UPDATE->ExeUpdate('tabela', $data, "WHERE id = :id", 'id=' . $id);
-        if (DB_UPDATE->getResult()) {
+        $this->update->ExeUpdate('tabela', $data, "WHERE id = :id", 'id=' . $id);
+        if ($this->update->getResult()) {
             return true;
         }
         return false;
@@ -109,9 +127,9 @@ class LeaguesModel extends Model
     public function createLeague($data)
     {
         $dataToSave = Helper::dbPrepateData($data);
-        DB_CREATE_CLASS->ExeCreate('leagues', $dataToSave);
-        if (DB_CREATE_CLASS->getResult()) {
-            $leagueId = DB_CREATE_CLASS->getResult();
+        $this->create->ExeCreate('leagues', $dataToSave);
+        if ($this->create->getResult()) {
+            $leagueId = $this->create->getResult();
             return $leagueId;
         }
         return false;
@@ -121,8 +139,8 @@ class LeaguesModel extends Model
     {
         $dataToSave = Helper::dbPrepateData($data);
         $parseString = Helper::dbDataToParseString($dataToSave, $id);
-        DB_UPDATE_CLASS->ExeUpdate('leagues', $data, "WHERE id = :id", $parseString);
-        if (DB_UPDATE_CLASS->getResult()) {
+        $this->update->ExeUpdate('leagues', $data, "WHERE id = :id", $parseString);
+        if ($this->update->getResult()) {
             return true;
         }
         return false;

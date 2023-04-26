@@ -13,7 +13,3 @@ define('DB_USER', 'root');
 define('DB_PASS', 'root');
 
 require_once(BASE . "/config/App.php");
-
-define('READ', new Read);
-define('DB_UPDATE_CLASS', new Update);
-define('DB_CREATE_CLASS', new Create);
